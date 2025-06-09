@@ -5,6 +5,7 @@ import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
 
 async function seedUsers() {
+  console.log('Seeding users...');
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await sql`
     CREATE TABLE IF NOT EXISTS users (
@@ -15,6 +16,7 @@ async function seedUsers() {
     );
   `;
 
+  console.log('Inserting users with generated SQL...');
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
@@ -30,6 +32,7 @@ async function seedUsers() {
 }
 
 async function seedInvoices() {
+  console.log('Seeding invoices...');
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
   await sql`
@@ -42,6 +45,7 @@ async function seedInvoices() {
     );
   `;
 
+  console.log('Inserting invoices with generated SQL...');
   const insertedInvoices = await Promise.all(
     invoices.map(
       (invoice) => sql`
@@ -56,6 +60,7 @@ async function seedInvoices() {
 }
 
 async function seedCustomers() {
+  console.log('Seeding customers...');
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
   await sql`
@@ -67,6 +72,7 @@ async function seedCustomers() {
     );
   `;
 
+  console.log('Inserting customers with generated SQL...');
   const insertedCustomers = await Promise.all(
     customers.map(
       (customer) => sql`
@@ -81,6 +87,7 @@ async function seedCustomers() {
 }
 
 async function seedRevenue() {
+  console.log('Seeding revenue...');
   await sql`
     CREATE TABLE IF NOT EXISTS revenue (
       month VARCHAR(4) NOT NULL UNIQUE,
@@ -88,6 +95,7 @@ async function seedRevenue() {
     );
   `;
 
+  console.log('Inserting revenue with generated SQL...');
   const insertedRevenue = await Promise.all(
     revenue.map(
       (rev) => sql`
@@ -103,6 +111,8 @@ async function seedRevenue() {
 
 export async function GET() {
   try {
+    console.log('Starting database seeding process...');
+    console.log('Connecting to .env.DATABASE_URL:', process.env.DATABASE_URL);
     const result = await sql.begin((sql) => [
       seedUsers(),
       seedCustomers(),
