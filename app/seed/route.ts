@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import postgres from 'postgres';
 import { invoices, customers, revenue, users } from '../lib/placeholder-data';
 
-const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
+const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 async function seedUsers() {
   console.log('Seeding users...');
@@ -112,7 +112,7 @@ async function seedRevenue() {
 export async function GET() {
   try {
     console.log('Starting database seeding process...');
-    console.log('Connecting to .env.DATABASE_URL:', process.env.DATABASE_URL);
+    console.log('Connecting to .env.POSTGRES_URL:', process.env.POSTGRES_URL);
     const result = await sql.begin((sql) => [
       seedUsers(),
       seedCustomers(),
