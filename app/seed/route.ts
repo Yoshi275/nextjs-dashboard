@@ -113,7 +113,7 @@ export async function GET() {
   try {
     console.log('Starting database seeding process...');
     console.log('Connecting to .env.POSTGRES_URL:', process.env.POSTGRES_URL);
-    const result = await sql.begin((sql) => [
+    await sql.begin(() => [
       seedUsers(),
       seedCustomers(),
       seedInvoices(),
